@@ -1,0 +1,6 @@
+CRITICAL - 2022-06-07 05:07:22 --> syntax error, unexpected token "echo"
+#0 C:\xampp\htdocs\Lab11Web\lab11_php_ci\ci4\system\CodeIgniter.php(368): CodeIgniter\CodeIgniter->tryToRouteIt(NULL)
+#1 C:\xampp\htdocs\Lab11Web\lab11_php_ci\ci4\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#2 C:\xampp\htdocs\Lab11Web\lab11_php_ci\ci4\system\CLI\Console.php(48): CodeIgniter\CodeIgniter->run()
+#3 C:\xampp\htdocs\Lab11Web\lab11_php_ci\ci4\spark(63): CodeIgniter\CLI\Console->run()
+#4 {main}
