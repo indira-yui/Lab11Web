@@ -236,3 +236,70 @@ Kemudian ubah file app/view/about.php seperti berikut.
 Refresh halaman tersebut
 
 ![hasil](img/css.png)
+
+# Praktikum 12 Framework Lanjutan (CRUD)
+
+## Langkah - Langkah Praktikum :
+
+## Persiapan
+Untuk Memulai membuat aplikasi CRUD sederhana, yang perlu disiapkan adalah database server menggunakan MySQL. Pastikan MySQL Server sudah dapat dijalankan melalui XAMPP Control Panel.
+
+## Membuat Database 
+```
+CREATE DATABASE lab_ci4;
+```
+
+![New_Database](img/newdatabase.png)
+
+## Membuat Tabel
+```
+CREATE TABLE artikel (
+  id INT(11) auto_increment,
+  judul VARCHAR(200) NOT NULL,
+  isi TEXT,
+  gambar VARCHAR(200),
+  status TINYINT(1) DEFAULT 0,
+  slug VARCHAR(200),
+  PRIMARY KEY(id)
+);
+```
+
+![New_table](img/newtable.png)
+
+![Tabke](img/table.png)
+
+## Konfigurasi Koneksi Database
+Selanjutnya membuat konfigurasi untuk menghubungkan dengan database server. Konfigurasi dapat dilakukan dengan dua acara, yaitu pada file **app/config/database.php** atau menggunakan file **.env**. Pada praktikum ini kita gunakan konfigurasi pada file **.env**.
+
+![img](img/env1.png)
+
+## Membuat Model
+Selanjutnya adalah membuat Model untuk memproses data Artikel. Buat file baru pada direktori **app/Models** dengan nama **ArtikelModel.php**.
+
+![img](img/artikelmodel.png)
+
+## Membuat Controller
+Buat Controllers baru dengan nama **Artikel.php** pada direktori **app/Controllers**.
+
+![img](img/artikel.png)
+
+## membuat View
+Buat direktori baru dengan nama **artikel** pada direktori **app/view**, kemudian buat file baru dengan nama **index.php**.
+
+![img](img/index.png)
+
+Selanjutnya buka browser kembali, dengan mengakses url `http://localhost:8080/artikel`
+
+![img](img/belumadadata.png)
+
+Belum ada data yang ditampilkan. Kemudian tambahkan beberapa data pada database agar dapat ditampilkan dataya.
+
+![img](img/data.png)
+
+```
+INSERT INTO artikel (judul, isi, slug) VALUE 
+('Artikel pertama', 'Lorem Ipsum adalah contoh teks atau dummy dalam industri percetakan dan penataan huruf atau typesetting. Lorem Ipsum telah menjadi standar contoh teks sejak tahun 1500an, saat seorang tukang cetak yang tidak dikenal mengambil sebuah kumpulan teks dan mengacaknya untuk menjadi sebuah buku contoh huruf.', 'artikel-pertama'),
+('Artikel kedua', 'Tidak seperti anggapan banyak orang, Lorem Ipsum bukanlah teks-teks yang diacak. Ia berakar dari sebuah naskah sastra latin klasik dari era 45 sebelum masehi, hingga bisa dipastikan usianya telah mencapai lebih dari 2000 tahun.', 'artikel-kedua');
+ ```
+
+Refresh kembali browser, sehingga akan ditampilkan hasilnya.
