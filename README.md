@@ -2,9 +2,17 @@
 |-------------------|---------------|
 |  Pemrograman Web  |  Praktikum 11 |
 
+---
+Daftar Isi :
+- [Praktikum 11 PHP Framework (Codeigniter)](#praktikum-11-php-framework-codeigniter)
+- [Praktikum 12 Framework Lanjutan (CRUD)](#praktikum-12-framework-lanjutan-crud)
+---
+
 # Lab11Web
 
 Dalam praktikum ini akan membuat program sederhana menggunakan Framework Codeigniter 4.
+
+# Praktikum 11 PHP Framework (Codeigniter)
 
 # Langkah - langkah praktikum
 
@@ -237,6 +245,9 @@ Refresh halaman tersebut
 
 ![hasil](img/css.png)
 
+---
+---
+
 # Praktikum 12 Framework Lanjutan (CRUD)
 
 ## Langkah - Langkah Praktikum :
@@ -303,3 +314,82 @@ INSERT INTO artikel (judul, isi, slug) VALUE
  ```
 
 Refresh kembali browser, sehingga akan ditampilkan hasilnya.
+
+![img](img/artikel2.png)
+
+## Membuat Tampilan Detail Artikel
+Tampilan pada saat judul berita di klik maka akan diarahkan ke halaman yang berbeda. Tambahkan fungsi baru pada **Controller Artikel** dengan nama **view()**.
+
+![img](img/view.png)
+
+## Membuat View Detail
+Buat view baru untuk halaman detail dengan nama **app/view/artikel/detail.php**
+
+![img](img/detail.png)
+
+## Membuat Routing Untuk Artikel Detail
+Buka kembali file **app/config/Routes.php**, kemudian tambahkan routing untuk artikel detail.
+
+![img](img/rounting.png)
+
+Untuk melihat hasilnya bisa dengan mengklik salah satu artikelnya.
+
+![img](img/artikelpertama.png)
+
+![img](img/artikelkedua.png)
+
+## Membuat Menu Admin
+Menu admin adalah untuk proses CRUD data artikel. Buat method baru pada **Controller/Artikel** dengan nama **admin_index()**.
+
+![img](img/adminindex.png)
+
+Selanjutnya buat view untuk tampilan admin pada **Views/artikel** dengan nama **admin_index.php**
+
+![img](img/adminindex2.png)
+
+Tambahkan routing untuk menu admin seperti berikut :
+
+![img](img/routingadmin.png)
+
+Untuk mengakses menu admin bisa dengan menggunakan url `http://localhost:8080/admin/artikel`
+
+![img](img/tampilanadmin.png)
+
+## Menambahkan Data Artikel
+Tambahkan fungsi/methode baru pada **Controller/Artikel** dengan nama **add()**.
+
+![img](img/add.png)
+
+Kemudian buat view untuk form tambahan dengan nama **form_add.php**.
+
+![img](img/formedit.png)
+
+Untuk mengakses menu add bisa dengan menggunakan url `http://localhost:8080/admin/artikel/add`
+
+![img](img/tambahartikel.png)
+
+## Mengubah Data
+Tambahkan fungsi/methode baru pada **Controller/Admin** dengan nama **edit()**.
+
+![img](img/controledit.png)
+
+Untuk mengakses menu add bisa dengan menggunakan url `http://localhost:8080/admin/artikel/edit/...(nama artikel yang ingin di edit)`
+
+![img](img/editartikel.png)
+
+## Menghapus Data
+Tambahkan fungsi/methode baru pada **Controller/Artikel** dengan nama **delet()**.
+
+![img](img/formdelete.png)
+
+Untuk menghapus suatu artikel dapat melalui menu artikel kemudain pilih artikel yang ingin di hapus dengan mengklik tombol **Hapus**.
+
+![img](img/hapusartikel.png)
+
+
+---
+---
+
+# Praktikum 13 Framework Lanjutan (Modul Login)
+
+## Langkah - Langkah Praktikum
