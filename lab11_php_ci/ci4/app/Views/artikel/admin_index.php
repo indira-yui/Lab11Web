@@ -34,7 +34,7 @@
             <th>ID</th>
             <th>Judul</th>
             <th>Status</th>
-            <th>AKsi</th>
+            <th>Aksi</th>
         </tr>
     </tfoot>
 </table>

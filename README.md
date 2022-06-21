@@ -1,11 +1,13 @@
 |   INDIRA ALINE    |   TI.20 A.1   |
 |-------------------|---------------|
-|  Pemrograman Web  |  Praktikum 11 |
+|  Pemrograman Web  |   312010042   |
 
 ---
 Daftar Isi :
 - [Praktikum 11 PHP Framework (Codeigniter)](#praktikum-11-php-framework-codeigniter)
 - [Praktikum 12 Framework Lanjutan (CRUD)](#praktikum-12-framework-lanjutan-crud)
+- [Praktikum 13 Framework Lanjutan (Modul Login)](#praktikum-13-framework-lanjutan-modul-login)
+
 ---
 
 # Lab11Web
@@ -393,3 +395,211 @@ Untuk menghapus suatu artikel dapat melalui menu artikel kemudain pilih artikel 
 # Praktikum 13 Framework Lanjutan (Modul Login)
 
 ## Langkah - Langkah Praktikum
+
+Untuk mmemulai membuat Modul Login, yang perlu disiapkan adalah database serber menggunakan MySQL. Pastikan MySQL Server sudah dapat dijalankan melalui XAMPP
+
+## Membuat Tabel user Login
+
+![img](img/usertable.png)
+
+```
+CREATE TABLE user (
+  id INT(11) auto_increment,
+  username VARCHAR(200) NOT NULL,
+  useremail VARCHAR(200),
+  userpassword VARCHAR(200),
+  PRIMARY KEY(id) 
+);
+```
+
+## Membuat Model User
+Selanjutnya membuat Model untuk memproses data Login. Buat file baru pada direktori **app/Models** dengan nama **UserModel.php**
+
+![img](img/usermodel.png)
+
+## Membuat Controller User
+Membuat Controller baru dengan nama **User.php** pada direktori **app/Controllers**. Kemudian tambahkan methode **index()**untuk menampilkan daftar user, dan methode **login()** untuk proses login.
+
+```php
+<?php
+
+namespace App\Controllers;
+
+use App\Models\UserModel;
+
+class User extends BaseController
+{
+    public function index()
+    {
+        $title = 'Daftar User';
+        $model = new UserModel();
+        $user = $model->findALL();
+        return view('user/index', compact('user', 'title'));
+    }
+
+    public function login()
+    {
+        helper(['form']);
+        $email = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
+        if (!$email)
+        {
+            return view('user/login');
+        }
+
+        $session = session();
+        $model = new UserModel();
+        $login = $model->where('useremail', $email)->first(); 
+        if ($login)
+        {
+            $pass = $login['userpassword'];
+            if (password_verify($password, $pass))
+            {
+                $login_data = [
+                    'user_id' => $login['id'],
+                    'user_name' => $login['username'],
+                    'user_email' => $login['useremail'],
+                    'logged_in' => TRUE,
+                ];
+                $session->set($login_data);
+                return redirect('admin/artikel');
+            }
+            else
+            {
+                $session->setFlashdata("flash_msg", "Password salah");
+                return redirect()->to('/user/login');
+            }
+        }
+        else
+        {
+            $session->setFlashdata("flash_msg", "email tidak terdaftar.");
+            return redirect()->to('/user/login');
+        }        
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/user/login');
+    }
+}
+```
+
+## Membuat View Login
+Buat direktri baru dengan nama **user** pada direktori **app/views**, kemudian buat file baru dengan nama **login.php**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="<?= base_url('/style.css');?>">
+</head>
+<body>
+    <div id="login-wrapper">
+        <h1>Sign In</h1>
+        <br>
+        <?php if(session()->getFlashdata('flash_msg')): ?>
+            <div class="alert alert-danger">
+                <?= session()->getFlashdata('flash_msg') ?>
+            </div>
+        <?php endif;?>
+        
+        <form action="" method="post">
+            <div class="mb-3">
+                <!-- <label for="InputForEmail" class="form-label">Email address</label> <br> -->
+                <input type="email" name="email" class="form-control" id="InputForEmail" value="<?= set_value('email') ?>" placeholder="Email address">
+            </div>
+            <div class="mb-3">
+                <!-- <label for="InputForPassword" class="form-label">Password</label><br> -->
+                <input type="password" name="password" class="form-control" id="InputForPassword" placeholder="Password"> 
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+    
+</body>
+</html>
+```
+
+## Membuat Database Seeder
+Database seeder digunakan untuk membuat data dummy. Untuk keperluan ujicoba modul login, kita perlu memasukan data user dan password kedalam database. Untuk itu buat database seeder untuk tabel user. Buka CLI, kemudain tulis perintah berikut :
+
+```
+php spark make:seeder UserSeeder
+```
+
+![img](img/seeder.png)
+
+Selanjutnya, buka file **UserSeeder.php** yang berada di lokasi direktori **/app/Database/Seeds/UserSeeder.php** kemudian isi dengan kode berikut :
+
+```php
+<?php
+
+namespace App\Database\Seeds;
+
+use CodeIgniter\Database\Seeder;
+
+class UserSeeder extends Seeder
+{
+    public function run()
+    {
+        $model = model('UserModel');
+		$model->insert([
+			'username' => 'admin',
+			'useremail' => 'admin@email.com',
+			'userpassword' => password_hash('admin123', PASSWORD_DEFAULT),
+		]);
+    }
+}
+```
+
+Selanjutnya buka kembali CLI dan ketik peritah berikut
+
+```
+php spark db:seed UserSeeder
+```
+
+![img](img/cliuserseeder.png)
+
+Selanjutnya untuk ujicoba login dengan memasukan url berikut http://localhost:8080/user/login
+
+![img](img/login.png)
+
+## Menambahkan Auth Filter
+Selanjutnya membuat filter untuk halaman admin. Buat file baru dengan nama **Auth.php** pada direktori **app/Filters**.
+
+![img](img/authphp.png)
+
+Selanjutnya buka file **app/Config/Filters.php** tambahkan kode berikut :
+
+``` php
+'auth' => App\Filters\Auth::class
+```
+
+![img](img/filterphp.png)
+
+Selanjutnya buka file **app/Config/Routes.php** dan sesuaikan kodenya.
+
+![img](img/configroutes.png)
+
+Buka url berikut `http://localhost:8080/admin/artikel` ketika alamat tersebut diakses maka akan dimunculkan halaman login terlebih dahulu atau bisa juga melalui tombol login pada menu artikel.
+
+![img](img/teslogin.png)
+
+Berikut tampilan halaman admin/artikel ketika sudah masuk atau login menggunakan email : admin@email.com , dan password : admin123
+
+![img](img/loginsukses.png)
+
+## Fungsi Logout
+Tambahkan methode logout pada **Controller/User** seperti berikut :
+
+![img](img/controllerslogout.png)
+
+Berikut tampilan tombol logout
+
+![img](img/logoutclick.jpg)
